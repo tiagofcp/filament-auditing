@@ -22,7 +22,7 @@ class AuditsRelationManager extends RelationManager
 
     public static function canViewForRecord(Model $ownerRecord): bool
     {
-        return auth()->user()->can('audit', $ownerRecord);
+        return auth()->user()->can('audit_'.strtolower(class_basename($ownerRecord)));
     }
 
     public static function getTitle(): string
@@ -68,7 +68,7 @@ class AuditsRelationManager extends RelationManager
                     ->action(fn (Audit $record) => static::restoreAuditSelected($record))
                     ->icon('heroicon-o-refresh')
                     ->requiresConfirmation()
-                    ->visible(fn (Audit $record): bool => auth()->user()->can('restoreAudit', $record) && $record->event === 'updated'),
+                    ->visible(fn (Audit $record): bool => auth()->user()->can('audit_restore'.strtolower(class_basename($ownerRecord))) && $record->event === 'updated'),
             ])
             ->bulkActions([
                 //
