@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use OwenIt\Auditing\Models\Audit;
+use Illuminate\Support\Str;
 
 class AuditsRelationManager extends RelationManager
 {
@@ -22,7 +23,7 @@ class AuditsRelationManager extends RelationManager
 
     public static function canViewForRecord(Model $ownerRecord): bool
     {
-        return auth()->user()->can('audit_'.strtolower(class_basename($ownerRecord)));
+        return auth()->user()->can('audit_'.Str::of(class_basename($ownerRecord))->afterLast('\\')->lower());
     }
 
     public static function getTitle(): string
@@ -68,7 +69,7 @@ class AuditsRelationManager extends RelationManager
                     ->action(fn (Audit $record) => static::restoreAuditSelected($record))
                     ->icon('heroicon-o-refresh')
                     ->requiresConfirmation()
-                    ->visible(fn (Audit $record): bool => auth()->user()->can('audit_restore_'.strtolower(class_basename($record))) && $record->event === 'updated'),
+                    ->visible(fn (Audit $record): bool => auth()->user()->can('audit_restore_'.Str::of($record->auditable_type)->afterLast('\\')->lower()) && $record->event === 'updated'),
             ])
             ->bulkActions([
                 //
