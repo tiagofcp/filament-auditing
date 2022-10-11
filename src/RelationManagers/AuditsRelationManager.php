@@ -68,7 +68,7 @@ class AuditsRelationManager extends RelationManager
                     ->action(fn (Audit $record) => static::restoreAuditSelected($record))
                     ->icon('heroicon-o-refresh')
                     ->requiresConfirmation()
-                    ->visible(fn (Audit $record): bool => auth()->user()->can('audit_restore'.strtolower(class_basename($ownerRecord))) && $record->event === 'updated'),
+                    ->visible(fn (Audit $record): bool => auth()->user()->can('audit_restore'.strtolower(class_basename($record))) && $record->event === 'updated'),
             ])
             ->bulkActions([
                 //
