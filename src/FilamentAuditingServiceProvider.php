@@ -28,14 +28,5 @@ class FilamentAuditingServiceProvider extends PluginServiceProvider
     public function packageBooted(): void
     {
         parent::packageBooted();
-
-        // Default values for view and restore audits. Add a policy to override these values
-        Gate::define('audit', function ($user, $resource) {
-            return true;
-        });
-
-        Gate::define('restoreAudit', function ($user, $resource) {
-            return true;
-        });
     }
 }
